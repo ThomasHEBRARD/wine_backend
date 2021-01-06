@@ -7,9 +7,11 @@ from business.appelation.models import Appelation
 
 
 class Bottle(BaseModel):
+    cellar = models.ForeignKey(Cellar, related_name="bottles", on_delete=models.DO_NOTHING)
     price = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)]
     )
     #vin peut il avoir plusieurs appelations?
     appelation = models.ForeignKey(Appelation, related_name="bottles", on_delete=models.DO_NOTHING, blank=False, null=True)
     cepage = models.ManyToManyField(Cepage, related_name="bottles")
+
