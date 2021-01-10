@@ -5,4 +5,4 @@ from business.bottle.models import Bottle
 class BottleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bottle
-        fields = "__all__"
+        fields = ["name"]
