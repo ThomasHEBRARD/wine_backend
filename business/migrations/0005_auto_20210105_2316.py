@@ -7,18 +7,23 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('business', '0004_appelation'),
+        ("business", "0004_appelation"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='bottle',
-            name='appelation',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='bottles', to='business.appelation'),
+            model_name="bottle",
+            name="appelation",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="bottles",
+                to="business.appelation",
+            ),
         ),
         migrations.AddField(
-            model_name='bottle',
-            name='cepage',
-            field=models.ManyToManyField(related_name='bottles', to='business.Cepage'),
+            model_name="bottle",
+            name="cepage",
+            field=models.ManyToManyField(related_name="bottles", to="business.Cepage"),
         ),
     ]

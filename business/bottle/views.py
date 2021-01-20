@@ -16,5 +16,7 @@ class BottleViewSet(ModelViewSet):
 
     @action(methods=["post"], detail=False)
     def get_bottles(self, request):
-        serializer = self.get_serializer(Bottle.objects.filter(name__icontains=request.data.get("name")), many=True)
+        serializer = self.get_serializer(
+            Bottle.objects.filter(name__icontains=request.data.get("name")), many=True
+        )
         return Response(serializer.data)

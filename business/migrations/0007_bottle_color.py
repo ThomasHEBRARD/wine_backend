@@ -6,13 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('business', '0006_auto_20210109_2149'),
+        ("business", "0006_auto_20210109_2149"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='bottle',
-            name='color',
-            field=models.CharField(choices=[('Red', 'Red'), ('White', 'White'), ('Rosé', 'Rose'), ('Amber', 'Amber'), ('Effervescent', 'Effervescent')], default='Red', max_length=64),
+            model_name="bottle",
+            name="color",
+            field=models.CharField(
+                choices=[
+                    ("Red", "Red"),
+                    ("White", "White"),
+                    ("Rosé", "Rose"),
+                    ("Amber", "Amber"),
+                    ("Effervescent", "Effervescent"),
+                ],
+                default="Red",
+                max_length=64,
+            ),
         ),
     ]

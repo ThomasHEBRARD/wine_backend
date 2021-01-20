@@ -6,12 +6,12 @@ from business.cepage.views import CepageViewSet
 from business.appelation.views import AppelationViewSet
 
 router = routers.DefaultRouter()
-router.register(r'bottles', BottleViewSet)
-router.register(r'cellar', CellarViewSet)
-router.register(r'cepages', CepageViewSet)
-router.register(r'appelations', AppelationViewSet)
+router.register(r"bottles", BottleViewSet)
+router.register(r"cellar", CellarViewSet)
+router.register(r"cepages", CepageViewSet)
+router.register(r"appelations", AppelationViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path("", include(router.urls)),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]
