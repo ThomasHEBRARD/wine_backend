@@ -9,16 +9,16 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234  
     ports:
-    - "5433:5432"
-  # app:
-  #   build: .
-  #   command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-  #   container_name: chaussetonbebe-backend-app
-  #   volumes:
-  #     - .:/app
-  #   depends_on:
-  #     - db
-  #   ports:
-  #     - "8000:8000"
-  #   stdin_open: true
-  #   tty: true
+      - "5432:5432"
+  app:
+    build: .
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    container_name: wine-backend-app
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    tty: true

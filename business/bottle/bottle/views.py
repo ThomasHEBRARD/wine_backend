@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import LimitOffsetPagination
-from business.bottle.serializers import BottleSerializer
-from business.bottle.models import Bottle
+from .serializers import BottleSerializer
+from business.bottle.bottle.models import Bottle
 from rest_framework.response import Response
 from rest_framework.decorators import action
 

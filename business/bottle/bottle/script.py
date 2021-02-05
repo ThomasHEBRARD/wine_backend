@@ -1,6 +1,6 @@
 import psycopg2
 import pandas as pd
-# from business.bottle.models import Bottle
+# from business.bottle.bottle.models import Bottle
 
 credentials = {
     "host": "localhost",

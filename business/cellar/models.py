@@ -5,4 +5,5 @@ from django.core.validators import MinValueValidator
 
 class Cellar(BaseModel):
     # type de cellar?
+    # user
     pass

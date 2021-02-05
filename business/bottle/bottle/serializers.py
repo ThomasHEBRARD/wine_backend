@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from business.bottle.models import Bottle
+from business.bottle.bottle.models import Bottle
 
 
 class BottleSerializer(serializers.ModelSerializer):

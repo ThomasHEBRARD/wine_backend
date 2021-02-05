@@ -1,4 +1,4 @@
 from django.contrib import admin
-from business.bottle.models import Bottle
+from business.bottle.bottle.models import Bottle
 
 admin.site.register(Bottle)

@@ -82,11 +82,11 @@ WSGI_APPLICATION = "wine_backend.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "wine_backend",
+        "NAME": "postgres",
         "USER": "postgres",
         "PASSWORD": "1234",
-        "HOST": "localhost",
-        "PORT": "5433",
+        "HOST": "db",
+        "PORT": "5432",
     },
 }
 
