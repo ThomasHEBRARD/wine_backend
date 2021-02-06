@@ -1,5 +1,6 @@
 import psycopg2
 import pandas as pd
+
 # from business.bottle.bottle.models import Bottle
 
 credentials = {
@@ -60,6 +61,7 @@ def get():
         select_query="""select * from public.crawled_bottles""", column_names=column_names
     ).domaine
 
+
 print(set(get()))
 
 # for bottle in list(set(get())):
@@ -67,7 +69,7 @@ print(set(get()))
 
 
 # def ok():
-    # return [{"name": elt} for elt in list(set(get()))]
+# return [{"name": elt} for elt in list(set(get()))]
 
 
 # import json

@@ -11,4 +11,4 @@ class Appelation(BaseModel):
     # longitude
     # climat
 
-    # vin de table, vin de pays, vins délimités de qualité supérieure (VDQS), l'appellation d'origine contrôlée (AOC) 
+    # vin de table, vin de pays, vins délimités de qualité supérieure (VDQS), l'appellation d'origine contrôlée (AOC)
