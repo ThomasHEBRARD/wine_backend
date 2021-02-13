@@ -1,24 +1,24 @@
-import psycopg2
-import pandas as pd
-
 # from business.bottle.bottle.models import Bottle
-
-credentials = {
-    "host": "localhost",
-    "user": "postgres",
-    "database": "postgres",
-    "password": "1234",
-    "port": "5432",
-}
+import pandas as pd
+import psycopg2
 
 
 def connector_db():
-    connection = psycopg2.connect(**credentials)
+    connection = psycopg2.connect(
+        host="db",
+        database="wine_crawling",
+        user="postgres",
+        password="1234",
+        port=5433,
+    )
     return connection
 
 
+connection = connector_db()
+
+
 def postgresql_to_dataframe(select_query, column_names):
-    cursor = connector_db().cursor()
+    cursor = connection.cursor()
     try:
         cursor.execute(select_query)
     except (Exception, psycopg2.DatabaseError) as error:
@@ -33,7 +33,7 @@ def postgresql_to_dataframe(select_query, column_names):
     return df
 
 
-column_names = [
+crawled_bottles_columns = [
     "name",
     "pays",
     "domaine",
@@ -56,22 +56,16 @@ column_names = [
 ]
 
 
-def get():
-    return postgresql_to_dataframe(
-        select_query="""select * from public.crawled_bottles""", column_names=column_names
-    ).domaine
+def get_crawled_bottles():
+    return tuple(
+        postgresql_to_dataframe(
+            select_query="""
+        select * from public.crawled_bottles
+        """,
+            column_names=crawled_bottles_columns,
+        )
+    )
 
 
-print(set(get()))
-
-# for bottle in list(set(get())):
-#     Bottle.objects.create(name=bottle, code=bottle)
-
-
-# def ok():
-# return [{"name": elt} for elt in list(set(get()))]
-
-
-# import json
-# with open('data.json', 'w', encoding='utf-8') as f:
-#     json.dump(ok(), f, ensure_ascii=False, indent=4)
+bottles = get_crawled_bottles()
+print(bottles)

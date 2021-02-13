@@ -3,7 +3,7 @@ from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 from user.user.models import User
-
+from business.cellar.models import Cellar
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +19,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
+        cellar = Cellar.objects.create(name="My Cellar", code=user.email, user=user)
         return user
 
 

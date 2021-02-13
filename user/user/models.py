@@ -24,6 +24,10 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
+class Theme(models.TextChoices):
+    white = "white"
+    dark = "dark"
+    auto = "auto"
 
 class User(AbstractBaseUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -31,7 +35,12 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=True)
-
+    theme = models.CharField(
+        max_length=64,
+        choices=Theme.choices,
+        default=Theme.white,
+        null=False,
+    )
     first_name = models.CharField(max_length=50, unique=False)
     last_name = models.CharField(max_length=50, unique=False)
 

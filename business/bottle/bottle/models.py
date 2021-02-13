@@ -43,6 +43,7 @@ class Bottle(BaseModel):
     cellar = models.ForeignKey(
         Cellar, related_name="bottles", on_delete=models.DO_NOTHING, null=True
     )
+    cepage = models.ManyToManyField(Cepage, related_name="bottles")
     color = models.CharField(
         max_length=64,
         choices=WineColor.choices,
@@ -87,4 +88,3 @@ class Bottle(BaseModel):
     appelation = models.ForeignKey(
         Appelation, related_name="bottles", on_delete=models.DO_NOTHING, blank=False, null=True
     )
-    cepage = models.ManyToManyField(Cepage, related_name="bottles")
