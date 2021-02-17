@@ -1,9 +1,12 @@
 from rest_framework import status
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet, ViewSet
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.decorators import action
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from user.user.serializers import UserRegistrationSerializer, UserLoginSerializer
 from user.user.models import User
 
@@ -42,3 +45,11 @@ class UserLoginViewSet(RetrieveAPIView, ModelViewSet):
     #     }
 
     #     return Response(response, status=status_code)
+
+
+class UserLogoutViewSet(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @classmethod
+    def post(cls, request):
+        return Response(status=status.HTTP_204_NO_CONTENT)
