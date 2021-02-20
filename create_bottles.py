@@ -1,3 +1,4 @@
+from business.bottle.bottle_collection.models import BottleCollection
 from business.bottle.bottle.models import Bottle
 from business.cepage.models import Cepage
 from business.cellar.models import Cellar
@@ -8,6 +9,7 @@ from business.appelation.models import Appelation
 Cepage.objects.all().delete()
 cepage1, cepage2 = Cepage.objects.create(name="Cabernet France", code="cabernet", proportion=0.5), Cepage.objects.create(name="Duras", code="duras", proportion=0.5)
 Bottle.objects.all().delete()
+BottleCollection.objects.all().delete()
 Appelation.objects.all().delete()
 appelation1, appelation2 = Appelation.objects.create(name="AOC", code="aoc"), Appelation.objects.create(name="AOP", code="aop")
 
@@ -18,7 +20,6 @@ bottles = [
         "name": "Château Margaux",
         "code": "margaux",
         "millesime": 2017,
-        "cellar": cellar,
         "appelation": appelation1,
         "degre_alcool": 13.4,
         "color": "Red",
@@ -28,7 +29,6 @@ bottles = [
         "name": "Château Crozes-Hermitage",
         "code": "crozes_hermitage",
         "millesime": 2016,
-        "cellar": cellar,
         "appelation": appelation2,
         "degre_alcool": 13.4,
         "color": "Red",
@@ -38,7 +38,6 @@ bottles = [
         "name": "Château Balaran",
         "code": "balaran",
         "millesime": 2017,
-        "cellar": cellar,
         "appelation": appelation1,
         "degre_alcool": 13.4,
         "color": "Red",
@@ -48,7 +47,6 @@ bottles = [
         "name": "Château Ratatouille",
         "code": "ratatouile",
         "millesime": 2017,
-        "cellar": cellar,
         "appelation": appelation2,
         "degre_alcool": 13.4,
         "color": "Red",
@@ -58,7 +56,6 @@ bottles = [
         "name": "Cambon la pelouse",
         "code": "la_pelouse",
         "millesime": 2018,
-        "cellar": cellar,
         "appelation": appelation1,
         "degre_alcool": 11.4,
         "color": "White",
@@ -68,7 +65,6 @@ bottles = [
         "name": "Château Coutet",
         "code": "coutet_2017",
         "millesime": 2017,
-        "cellar": cellar,
         "appelation": appelation1,
         "degre_alcool": 13.4,
         "color": "Red",
@@ -78,7 +74,6 @@ bottles = [
         "name": "Château Syrah",
         "code": "syrah",
         "millesime": 2016,
-        "cellar": cellar,
         "appelation": appelation2,
         "degre_alcool": 13.4,
         "color": "Red",
@@ -86,9 +81,10 @@ bottles = [
     }
 ]
 
-
-
 for bottle in bottles:
-    b = Bottle.objects.create(**bottle)
+    b = BottleCollection.objects.create(**bottle)
     b.cepage.add(cepage1) 
     b.save()
+
+for bottle in BottleCollection.objects.all():
+    Bottle.objects.create(bottle_collection=bottle, cellar=cellar, stock=1)
