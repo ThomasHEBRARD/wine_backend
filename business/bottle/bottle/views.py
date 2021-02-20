@@ -18,10 +18,3 @@ class BottleViewSet(ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.order_by("id")
-
-    @action(methods=["get"], detail=False)
-    def get_bottles(self, request):
-        serializer = self.get_serializer(
-            Bottle.objects.filter(name__icontains=request.data.get("name")), many=True
-        )
-        return Response(serializer.data)
