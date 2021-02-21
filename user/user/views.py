@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from user.user.serializers import UserRegistrationSerializer, UserLoginSerializer
+from user.user.serializers import UserRegistrationSerializer, UserLoginSerializer, UserSerializer
 from user.user.models import User
 
 class UserRegistrationViewSet(CreateModelMixin, GenericViewSet):
@@ -33,23 +33,15 @@ class UserLoginViewSet(RetrieveAPIView, ModelViewSet):
     permission_classes = (AllowAny,)
     serializer_class = UserLoginSerializer
 
-    # def post(self, request):
-    #     serializer = self.serializer_class(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     status_code = status.HTTP_200_OK
-    #     response = {
-    #         "success": "True",
-    #         "status_code": status_code,
-    #         "message": "User logged in successfully",
-    #         "token": serializer.data["token"],
-    #     }
-
-    #     return Response(response, status=status_code)
-
-
 class UserLogoutViewSet(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
     @classmethod
     def post(cls, request):
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
