@@ -14,7 +14,12 @@ class BottleViewSet(ModelViewSet):
     pagination_class = LimitOffsetPagination
     permission_classes = (IsAuthenticated,)
     filter_backends = [SearchFilter]
-    search_fields = ["bottle_collection__name", "bottle_collection__millesime"]
+    search_fields = ["bottle_collection__name"]
 
+    # test with 5 millions bottles
+    # look into his bottles
+    # filter by user before filtering
     def get_queryset(self):
-        return self.queryset.order_by("id")
+        return self.queryset.filter(
+            cellar__user__email=self.request.user.email
+        ).prefetch_related("bottle_collection")

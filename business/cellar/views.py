@@ -10,4 +10,4 @@ class CellarViewSet(ModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
-        return self.queryset.order_by("id")
+        return self.queryset
