@@ -10,4 +10,5 @@ class BottleSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         serializer_data = super().to_representation(instance)
         serializer_data["name"] = instance.bottle_collection.name
+        serializer_data["id"] = instance.bottle_collection.id
         return serializer_data

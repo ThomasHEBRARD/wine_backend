@@ -102,3 +102,15 @@ for bottle in bottles2:
     b.cepage.add(cepage2)
     b.save()
     Bottle.objects.create(bottle_collection=b, cellar=cellar2, stock=1)
+
+for i in range (1, 1000000):
+    j = {
+        "name": f"Château{i} Syrah{i}",
+        "code": f"syrah{i}",
+        "millesime": 2016,
+        "appelation": appelation2,
+        "degre_alcool": 13.4,
+        "color": "Red",
+        "viticulture": "Ecological",
+    }
+    BottleCollection.objects.create(**j)
