@@ -1,9 +1,9 @@
 Django==3.0.7
 djangorestframework==3.11.0
 djangorestframework-jwt==1.11.0
+django-filter==2.2.0
 django-cors-headers
 gunicorn
 psycopg2==2.8.4
 pylint==2.1.1
-djangorestframework-jwt==1.11.0
 pandas

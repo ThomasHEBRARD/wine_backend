@@ -31,8 +31,8 @@ class BottleViewSet(ModelViewSet):
     # form of answer: [{'bottleId': xxxx, 'stockToRemove': xxx}, .. ]
     @action(methods=["POST"], detail=False)
     def remove_bottles(self, request):
-        list_of_bottles_to_remove = request.data
         user = request.user
+        list_of_bottles_to_remove = request.data
         for bottle_info_to_remove in list_of_bottles_to_remove:
             bottle_to_update = Bottle.objects.get(
                 cellar__user=user,

@@ -19,15 +19,33 @@ appelation1, appelation2 = (
     Appelation.objects.create(name="AOP", code="aop"),
 )
 
-cellar1, cellar2 = Cellar.objects.get(code="M@gmail.com"), Cellar.objects.get(
-    code="m2@gmil.com"
+cellar1, cellar2 = Cellar.objects.get(code="m@gmail.com"), Cellar.objects.get(
+    code="m2@gmail.com"
 )
 
 bottles1 = [
     {
         "name": "Château Margaux",
-        "code": "margaux",
+        "code": "margaux_2017",
         "millesime": 2017,
+        "appelation": appelation1,
+        "degre_alcool": 13.4,
+        "color": "Red",
+        "viticulture": "Ecological",
+    },
+    {
+        "name": "Château Margaux",
+        "code": "margaux_2016",
+        "millesime": 2016,
+        "appelation": appelation1,
+        "degre_alcool": 13.4,
+        "color": "Red",
+        "viticulture": "Ecological",
+    },
+    {
+        "name": "Château Margaux",
+        "code": "margaux_2015",
+        "millesime": 2015,
         "appelation": appelation1,
         "degre_alcool": 13.4,
         "color": "Red",
@@ -103,7 +121,7 @@ for bottle in bottles2:
     b.save()
     Bottle.objects.create(bottle_collection=b, cellar=cellar2, stock=1)
 
-for i in range (1, 1000000):
+for i in range (1, 10000):
     j = {
         "name": f"Château{i} Syrah{i}",
         "code": f"syrah{i}",
