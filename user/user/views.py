@@ -7,8 +7,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from user.user.serializers import UserRegistrationSerializer, UserLoginSerializer, UserSerializer
+from user.user.serializers import (
+    UserRegistrationSerializer,
+    UserLoginSerializer,
+    UserSerializer,
+)
 from user.user.models import User
+
 
 class UserRegistrationViewSet(CreateModelMixin, GenericViewSet):
     queryset = User.objects.all()
@@ -32,6 +37,7 @@ class UserLoginViewSet(RetrieveAPIView, ModelViewSet):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = UserLoginSerializer
+
 
 class UserLogoutViewSet(APIView):
     permission_classes = (IsAuthenticated,)

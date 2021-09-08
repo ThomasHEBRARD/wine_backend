@@ -2,6 +2,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import LimitOffsetPagination
 from .serializers import BottleSerializer
 from business.bottle.bottle.models import Bottle
+from business.bottle.bottle_collection.models import BottleCollection
+from business.cellar.models import Cellar
 from rest_framework.filters import SearchFilter
 from rest_framework.decorators import action
 from rest_framework.status import HTTP_200_OK
@@ -43,3 +45,15 @@ class BottleViewSet(ModelViewSet):
             if bottle_to_update.stock == 0:
                 bottle_to_update.delete()
         return Response(status=HTTP_200_OK)
+
+    @action(methods=["POST"], detail=False)
+    def add_bottle(self, request):
+        user = request.user
+        bottle_collection_id = request.data["chosenBottleId"]
+        stock_to_add = request.data["stockToAdd"]
+        bottle = Bottle.objects.create(
+            cellar=Cellar.objects.get(user__email=user.email),
+            bottle_collection=BottleCollection.objects.get(id=bottle_collection_id),
+            stock=stock_to_add,
+        )
+        return Response(self.get_serializer(bottle).data, status=HTTP_200_OK)

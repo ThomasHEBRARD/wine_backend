@@ -5,4 +5,4 @@ from business.cepage.models import Cepage
 class CepageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cepage
-        fields = "__all__"
+        fields = ["name", "proportion"]

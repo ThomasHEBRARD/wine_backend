@@ -5,6 +5,7 @@ from rest_framework_jwt.settings import api_settings
 from user.user.models import User
 from business.cellar.models import Cellar
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -34,12 +35,16 @@ class UserLoginSerializer(serializers.Serializer):
         user = authenticate(email=email, password=password)
 
         if user is None:
-            raise serializers.ValidationError("A user with this email and password is not found")
+            raise serializers.ValidationError(
+                "A user with this email and password is not found"
+            )
 
         try:
             payload = api_settings.JWT_PAYLOAD_HANDLER(user)
             jwt_token = api_settings.JWT_ENCODE_HANDLER(payload)
             update_last_login(None, user)
         except User.DoesNotExist:
-            raise serializers.ValidationError("User with given email and password does not exists")
+            raise serializers.ValidationError(
+                "User with given email and password does not exists"
+            )
         return {"email": user.email, "token": jwt_token}
