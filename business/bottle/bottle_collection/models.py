@@ -3,7 +3,7 @@ from business.shared.models import BaseModel
 from django.core.validators import MinValueValidator
 from business.cellar.models import Cellar
 from business.cepage.models import Cepage
-from business.appelation.models import Appelation
+from business.appellation.models import Appellation
 
 
 class WineColor(models.TextChoices):
@@ -89,7 +89,7 @@ class BottleCollection(BaseModel):
         default=0000,
     )
     appellation = models.ForeignKey(
-        Appelation,
+        Appellation,
         related_name="bottles",
         on_delete=models.DO_NOTHING,
         blank=False,

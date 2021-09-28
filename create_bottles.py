@@ -2,7 +2,7 @@ from business.bottle.bottle_collection.models import BottleCollection
 from business.bottle.bottle.models import Bottle
 from business.cepage.models import Cepage
 from business.cellar.models import Cellar
-from business.appelation.models import Appelation
+from business.appellation.models import Appellation
 
 # ./manage.py shell < create_bottles.py
 
@@ -13,11 +13,39 @@ cepage1, cepage2 = (
 )
 Bottle.objects.all().delete()
 BottleCollection.objects.all().delete()
-Appelation.objects.all().delete()
-appelation1, appelation2 = (
-    Appelation.objects.create(name="AOC", code="aoc"),
-    Appelation.objects.create(name="AOP", code="aop"),
+Appellation.objects.all().delete()
+appellation1, appellation2 = (
+    Appellation.objects.create(name="AOC", code="aoc"),
+    Appellation.objects.create(name="AOP", code="aop"),
 )
+
+
+def connector_db():
+    connection = psycopg2.connect(
+        host="localhost",
+        database="postgres_ana",
+        user="postgres_ana",
+        password="1234",
+        port=5432,
+    )
+    return connection
+
+
+def postgresql_to_dataframe(connection, select_query, column_names):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(select_query)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error: %s" % error)
+        cursor.close()
+        return 1
+
+    tupples = cursor.fetchall()
+    cursor.close()
+
+    df = pd.DataFrame(tupples, columns=column_names)
+    return df
+
 
 cellar1, cellar2 = Cellar.objects.get(code="m@gmail.com"), Cellar.objects.get(
     code="m2@gmail.com"
@@ -28,7 +56,7 @@ bottles1 = [
         "name": "Château Margaux",
         "code": "margaux_2017",
         "millesime": 2017,
-        "appelation": appelation1,
+        "appellation": appellation1,
         "degre_alcool": 13.4,
         "color": "Red",
         "viticulture": "Ecological",
@@ -37,7 +65,7 @@ bottles1 = [
         "name": "Château Margaux",
         "code": "margaux_2016",
         "millesime": 2016,
-        "appelation": appelation1,
+        "appellation": appellation1,
         "degre_alcool": 13.4,
         "color": "Red",
         "viticulture": "Ecological",
@@ -46,7 +74,7 @@ bottles1 = [
         "name": "Château Margaux",
         "code": "margaux_2015",
         "millesime": 2015,
-        "appelation": appelation1,
+        "appellation": appellation1,
         "degre_alcool": 13.4,
         "color": "Red",
         "viticulture": "Ecological",
@@ -55,7 +83,7 @@ bottles1 = [
         "name": "Château Crozes-Hermitage",
         "code": "crozes_hermitage",
         "millesime": 2016,
-        "appelation": appelation2,
+        "appellation": appellation2,
         "degre_alcool": 13.4,
         "color": "Red",
         "viticulture": "Ecological",
@@ -64,7 +92,7 @@ bottles1 = [
         "name": "Château Balaran",
         "code": "balaran",
         "millesime": 2017,
-        "appelation": appelation1,
+        "appellation": appellation1,
         "degre_alcool": 13.4,
         "color": "Red",
         "viticulture": "Ecological",
@@ -75,7 +103,7 @@ bottles2 = [
         "name": "Château Ratatouille",
         "code": "ratatouile",
         "millesime": 2017,
-        "appelation": appelation2,
+        "appellation": appellation2,
         "degre_alcool": 13.4,
         "color": "Red",
         "viticulture": "Ecological",
@@ -84,7 +112,7 @@ bottles2 = [
         "name": "Cambon la pelouse",
         "code": "la_pelouse",
         "millesime": 2018,
-        "appelation": appelation1,
+        "appellation": appellation1,
         "degre_alcool": 11.4,
         "color": "White",
         "viticulture": "Biodynamique",
@@ -93,7 +121,7 @@ bottles2 = [
         "name": "Château Coutet",
         "code": "coutet_2017",
         "millesime": 2017,
-        "appelation": appelation1,
+        "appellation": appellation1,
         "degre_alcool": 13.4,
         "color": "Red",
         "viticulture": "Ecological",
@@ -102,7 +130,7 @@ bottles2 = [
         "name": "Château Syrah",
         "code": "syrah",
         "millesime": 2016,
-        "appelation": appelation2,
+        "appellation": appellation2,
         "degre_alcool": 13.4,
         "color": "Red",
         "viticulture": "Ecological",
@@ -121,12 +149,12 @@ for bottle in bottles2:
     b.save()
     Bottle.objects.create(bottle_collection=b, cellar=cellar2, stock=1)
 
-for i in range (1, 10000):
+for i in range(1, 10000):
     j = {
         "name": f"Château{i} Syrah{i}",
         "code": f"syrah{i}",
         "millesime": 2016,
-        "appelation": appelation2,
+        "appellation": appellation2,
         "degre_alcool": 13.4,
         "color": "Red",
         "viticulture": "Ecological",

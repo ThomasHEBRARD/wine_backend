@@ -3,7 +3,7 @@ from business.shared.models import BaseModel
 from django.core.validators import MinValueValidator
 
 
-class Appelation(BaseModel):
+class Appellation(BaseModel):
     pass
     # pays
     # region

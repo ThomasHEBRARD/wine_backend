@@ -13,5 +13,5 @@ class BottleCollectionSerializer(serializers.ModelSerializer):
         serializer_data["cepage"] = CepageSerializer(
             instance.cepage.all(), many=True
         ).data
-        serializer_data["appelation"] = instance.appelation.name
+        serializer_data["appellation"] = instance.appellation.name
         return serializer_data
