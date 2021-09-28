@@ -1,15 +1,15 @@
 from business.bottle.bottle_collection.models import BottleCollection
 from business.bottle.bottle.models import Bottle
-from business.cepage.models import Cepage
+from business.grape.models import Grape
 from business.cellar.models import Cellar
 from business.appellation.models import Appellation
 
 # ./manage.py shell < create_bottles.py
 
-Cepage.objects.all().delete()
-cepage1, cepage2 = (
-    Cepage.objects.create(name="Cabernet France", code="cabernet", proportion=0.5),
-    Cepage.objects.create(name="Duras", code="duras", proportion=0.5),
+Grape.objects.all().delete()
+grape1, grape2 = (
+    Grape.objects.create(name="Cabernet France", code="cabernet", proportion=0.5),
+    Grape.objects.create(name="Duras", code="duras", proportion=0.5),
 )
 Bottle.objects.all().delete()
 BottleCollection.objects.all().delete()
@@ -139,13 +139,13 @@ bottles2 = [
 
 for bottle in bottles1:
     b = BottleCollection.objects.create(**bottle)
-    b.cepage.add(cepage1)
+    b.grape.add(grape1)
     b.save()
     Bottle.objects.create(bottle_collection=b, cellar=cellar1, stock=1)
 
 for bottle in bottles2:
     b = BottleCollection.objects.create(**bottle)
-    b.cepage.add(cepage2)
+    b.grape.add(grape2)
     b.save()
     Bottle.objects.create(bottle_collection=b, cellar=cellar2, stock=1)
 

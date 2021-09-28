@@ -16,8 +16,8 @@ class BottleCollectionViewSet(ModelViewSet):
     pagination_class = LimitOffsetPagination
     permission_classes = (IsAuthenticated,)
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ["name", "millesime", "cepage__name", "appellation__name"]
-    search_fields = ["name", "millesime", "cepage__name", "appellation__name"]
+    filterset_fields = ["name", "millesime", "grape__name", "appellation__name"]
+    search_fields = ["name", "millesime", "grape__name", "appellation__name"]
 
     def get_queryset(self):
         return self.queryset.order_by("id")

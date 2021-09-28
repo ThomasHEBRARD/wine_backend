@@ -2,7 +2,7 @@ from django.db import models
 from business.shared.models import BaseModel
 from django.core.validators import MinValueValidator
 from business.cellar.models import Cellar
-from business.cepage.models import Cepage
+from business.grape.models import Grape
 from business.appellation.models import Appellation
 
 
@@ -41,7 +41,7 @@ class WineViticulture(models.TextChoices):
 
 class BottleCollection(BaseModel):
     id = models.BigIntegerField(primary_key=True)  # uuid
-    grape = models.ManyToManyField(Cepage, related_name="bottles")
+    grape = models.ManyToManyField(Grape, related_name="bottles")
     color = models.CharField(
         max_length=64,
         choices=WineColor.choices,

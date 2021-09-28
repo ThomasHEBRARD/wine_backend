@@ -1,12 +1,12 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import LimitOffsetPagination
-from business.cepage.serializers import CepageSerializer
-from business.cepage.models import Cepage
+from business.grape.serializers import GrapeSerializer
+from business.grape.models import Grape
 
 
-class CepageViewSet(ModelViewSet):
-    queryset = Cepage.objects.all()
-    serializer_class = CepageSerializer
+class GrapeViewSet(ModelViewSet):
+    queryset = Grape.objects.all()
+    serializer_class = GrapeSerializer
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
