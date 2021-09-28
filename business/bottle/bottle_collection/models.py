@@ -40,48 +40,58 @@ class WineViticulture(models.TextChoices):
 
 
 class BottleCollection(BaseModel):
-    cepage = models.ManyToManyField(Cepage, related_name="bottles")
+    id = models.BigIntegerField(primary_key=True)  # uuid
+    grape = models.ManyToManyField(Cepage, related_name="bottles")
     color = models.CharField(
         max_length=64,
         choices=WineColor.choices,
         default=WineColor.red,
         null=False,
     )
-    # Strategy algorithm that enrichs this data
-    apogee = models.CharField(unique=True, max_length=255, null=True)
+    bottle_size = models.CharField(max_length=255, null=True)
+    image = models.CharField(max_length=255, null=True)
+    ranking = models.CharField(max_length=255, null=True)
+    url = models.CharField(max_length=255, null=True)
+    soil = models.CharField(max_length=255, null=True)
+    country = models.CharField(max_length=255, null=True)
+    garde = models.CharField(max_length=255, null=True)
+    apogee = models.CharField(max_length=255, null=True)
     website = models.CharField(max_length=255, null=True)
-    # classement =
-    # {' Cru Bourgeois', ' 1er Cru Classé Supérieur', ' 2ème Grand Cru Classé', ' Cru d Alsace',
-    # ' Grand Cru', ' 5ème Grand Cru Classé', ' GG', ' Cru Bourgeois Exceptionnel', ' IGT', ' DOC',
-    # ' Grand Cru Classé', ' Vin de Pays', ' 1er Grand Cru Classé', ' 1er Grand Cru Classé A', ' Second Vin',
-    # ' Cuvée des Dames', ' Second vin', ' DOCG', ' 3ème Grand Cru Classé', ' 1er Cru', None, ' 1er Cru ',
-    # ' 1er Grand Cru Classé B (depuis 2012)', ' 1er Grand Cru Classé B', ' Cru classé', ' DOCa', ' IGP',
-    # ' 1er cru', ' Cru Classé de Graves', ' 4ème Grand Cru Classé', ' Cru Classé', ' DO'}
     viticulture = models.CharField(
         max_length=64,
         choices=WineViticulture.choices,
         default=WineViticulture.not_specified,
         null=True,
     )
-    degre_alcool = models.DecimalField(
+    alcool = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         blank=True,
         null=True,
-        validators=[MinValueValidator(limit_value=0, message="Should be greater than 0")],
+        validators=[
+            MinValueValidator(limit_value=0, message="Should be greater than 0")
+        ],
     )
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         blank=True,
         null=True,
-        validators=[MinValueValidator(limit_value=0, message="Should be greater than 0")],
+        validators=[
+            MinValueValidator(limit_value=0, message="Should be greater than 0")
+        ],
     )
-    millesime = models.IntegerField(
+    vintage = models.IntegerField(
         null=False,
-        validators=[MinValueValidator(limit_value=0, message="Should be greater than 0")],
+        validators=[
+            MinValueValidator(limit_value=0, message="Should be greater than 0")
+        ],
         default=0000,
     )
-    appelation = models.ForeignKey(
-        Appelation, related_name="bottles", on_delete=models.DO_NOTHING, blank=False, null=True
+    appellation = models.ForeignKey(
+        Appelation,
+        related_name="bottles",
+        on_delete=models.DO_NOTHING,
+        blank=False,
+        null=True,
     )
