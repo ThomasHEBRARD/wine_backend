@@ -69,9 +69,8 @@ Grape.objects.all().delete()
 Bottle.objects.all().delete()
 BottleCollection.objects.all().delete()
 Appellation.objects.all().delete()
-Cellar.objects.all().delete()
 
-cellar = Cellar.objects.create(code="michael.scott@gnail.com")
+cellar = Cellar.objects.get(code="michael.scott@gnail.com")
 
 for row, col in df.iterrows():
     grape, _ = Grape.objects.get_or_create(name=col.grape, code=col.grape)
@@ -101,7 +100,7 @@ for row, col in df.iterrows():
         "url": col.url,
         "website": col.website,
     }
-    print(dic)
+
     bottle_collection = BottleCollection.objects.create(**dic)
     bottle_collection.grape.add(grape)
     bottle_collection.save()
