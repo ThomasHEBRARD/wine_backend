@@ -54,9 +54,11 @@ class BottleCollection(BaseModel):
     url = models.CharField(max_length=255, null=True)
     soil = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
+    region = models.CharField(max_length=255, null=True)
     garde = models.CharField(max_length=255, null=True)
     apogee = models.CharField(max_length=255, null=True)
     website = models.CharField(max_length=255, null=True)
+    winery = models.CharField(max_length=255, null=True)
     viticulture = models.CharField(
         max_length=64,
         choices=WineViticulture.choices,
