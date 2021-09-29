@@ -81,8 +81,8 @@ for row, col in df.iterrows():
     dic = {
         "id": col.id,
         # "website_id": col.website_id,
-        "name": col.name,
-        "code": col.name + col.id,
+        "name": col["name"],
+        "code": col["name"] + str(col.id),
         "vintage": col.vintage,
         "vintage": col.vintage if type(col.vintage) == "int" else 0000,
         "winery": col.winery,
@@ -101,7 +101,7 @@ for row, col in df.iterrows():
         "url": col.url,
         "website": col.website,
     }
-
+    print(dic)
     bottle_collection = BottleCollection.objects.create(**dic)
     bottle_collection.grape.add(grape)
     bottle_collection.save()
