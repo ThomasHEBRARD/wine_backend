@@ -4,34 +4,22 @@ from business.grape.models import Grape
 from business.cellar.models import Cellar
 from business.appellation.models import Appellation
 
+
+
+
 # ./manage.py shell < create_bottles.py
 
-Grape.objects.all().delete()
-grape1, grape2 = (
-    Grape.objects.create(name="Cabernet France", code="cabernet", proportion=0.5),
-    Grape.objects.create(name="Duras", code="duras", proportion=0.5),
-)
-Bottle.objects.all().delete()
-BottleCollection.objects.all().delete()
-Appellation.objects.all().delete()
-appellation1, appellation2 = (
-    Appellation.objects.create(name="AOC", code="aoc"),
-    Appellation.objects.create(name="AOP", code="aop"),
-)
 
-
-def connector_db():
+def postgresql_to_dataframe(select_query, column_names):
+    import psycopg2
+    import pandas as pd
     connection = psycopg2.connect(
-        host="localhost",
-        database="postgres_ana",
-        user="postgres_ana",
+        host="db_crawling",
+        database="postgres",
+        user="postgres",
         password="1234",
         port=5432,
     )
-    return connection
-
-
-def postgresql_to_dataframe(connection, select_query, column_names):
     cursor = connection.cursor()
     try:
         cursor.execute(select_query)
@@ -45,6 +33,51 @@ def postgresql_to_dataframe(connection, select_query, column_names):
 
     df = pd.DataFrame(tupples, columns=column_names)
     return df
+
+
+select_query = """
+    SELECT * FROM public.crawled_bottles
+    WHERE website = 'idealwine'
+    """
+
+column_names = [
+    "id",
+    "website_id",
+    "name",
+    "vintage",
+    "winery",
+    "country",
+    "region",
+    "appellation",
+    "soil",
+    "color",
+    "bottle_size",
+    "grape",
+    "viticulture",
+    "apogee",
+    "garde",
+    "alcool",
+    "price",
+    "ranking",
+    "image",
+    "url",
+    "website",
+]
+df = postgresql_to_dataframe(select_query, column_names)
+print(df)
+
+Grape.objects.all().delete()
+grape1, grape2 = (
+    Grape.objects.create(name="Cabernet France", code="cabernet", proportion=0.5),
+    Grape.objects.create(name="Duras", code="duras", proportion=0.5),
+)
+Bottle.objects.all().delete()
+BottleCollection.objects.all().delete()
+Appellation.objects.all().delete()
+appellation1, appellation2 = (
+    Appellation.objects.create(name="AOC", code="aoc"),
+    Appellation.objects.create(name="AOP", code="aop"),
+)
 
 
 cellar1, cellar2 = Cellar.objects.get(code="m@gmail.com"), Cellar.objects.get(
@@ -137,26 +170,26 @@ bottles2 = [
     },
 ]
 
-for bottle in bottles1:
-    b = BottleCollection.objects.create(**bottle)
-    b.grape.add(grape1)
-    b.save()
-    Bottle.objects.create(bottle_collection=b, cellar=cellar1, stock=1)
+# for bottle in bottles1:
+#     b = BottleCollection.objects.create(**bottle)
+#     b.grape.add(grape1)
+#     b.save()
+#     Bottle.objects.create(bottle_collection=b, cellar=cellar1, stock=1)
 
-for bottle in bottles2:
-    b = BottleCollection.objects.create(**bottle)
-    b.grape.add(grape2)
-    b.save()
-    Bottle.objects.create(bottle_collection=b, cellar=cellar2, stock=1)
+# for bottle in bottles2:
+#     b = BottleCollection.objects.create(**bottle)
+#     b.grape.add(grape2)
+#     b.save()
+#     Bottle.objects.create(bottle_collection=b, cellar=cellar2, stock=1)
 
-for i in range(1, 10000):
-    j = {
-        "name": f"Château{i} Syrah{i}",
-        "code": f"syrah{i}",
-        "millesime": 2016,
-        "appellation": appellation2,
-        "degre_alcool": 13.4,
-        "color": "Red",
-        "viticulture": "Ecological",
-    }
-    BottleCollection.objects.create(**j)
+# for i in range(1, 10000):
+#     j = {
+#         "name": f"Château{i} Syrah{i}",
+#         "code": f"syrah{i}",
+#         "millesime": 2016,
+#         "appellation": appellation2,
+#         "degre_alcool": 13.4,
+#         "color": "Red",
+#         "viticulture": "Ecological",
+#     }
+#     BottleCollection.objects.create(**j)

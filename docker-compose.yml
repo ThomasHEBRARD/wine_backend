@@ -2,23 +2,29 @@
 version: '3'
 
 services:
-  db:
+  db_backend:
     image: postgres
+    container_name: db_backend
     environment:
-      - POSTGRES_DB=wine_backend
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234  
     ports:
       - "5433:5432"
   app:
+    container_name: wine-backend-app
     build: .
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    container_name: wine-backend-app
     volumes:
       - .:/app
     depends_on:
-      - db
+      - db_backend
     ports:
       - "8000:8000"
     stdin_open: true
     tty: true
+
+# To communicate with the other container:
+# docker network create wine
+# docker network connect wine db_crawling
+# docker network connect wine db_backend
+# docker network connect wine wine-backend-app
