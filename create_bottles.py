@@ -63,49 +63,81 @@ column_names = [
     "website",
 ]
 
+
+def process_grape_data(data):
+    if data.website == "idealwine":
+        # virer les \xa0 et les \t
+        # if "/" not in data.grape:
+            # 
+        if "_" in data.grape:
+            grapes = [
+                {"grape": grape.split("_")[1], "percentage": grape.split("_")[0]}
+                for grape in data.grape.split("/")
+            ]
+            # Ingérer dans Grape
+        else:
+            grapes = data.grape.split("/")
+    if data.website == "vinsfins":
+        if "_" in data.grape:
+            grapes = [
+                {"grape": grape.split("_")[1], "percentage": grape.split("_")[0]}
+                for grape in data.grape.split(",")
+            ]
+            # Ingérer dans Grape
+        else:
+            grapes = data.grape.split(",")
+    if data.website == "millesima":
+        grapes = data.grape.split("/")
+        # Ingérer dans Grape (pas de pourcentage)
+    if data.website == "twil":
+        grapes = data.grape.split(",")
+        # Ingérer dans Grape (pas de pourcentage)
+
+
 df = postgresql_to_dataframe(select_query, column_names)
 
-Grape.objects.all().delete()
-Bottle.objects.all().delete()
-BottleCollection.objects.all().delete()
-Appellation.objects.all().delete()
+# Grape.objects.all().delete()
+# Bottle.objects.all().delete()
+# BottleCollection.objects.all().delete()
+# Appellation.objects.all().delete()
 
-cellar = Cellar.objects.get(code="michael.scott@gnail.com")
+# cellar = Cellar.objects.get(code="michael.scott@gnail.com")
 
 for row, col in df.iterrows():
+    process_crawling_data(col)
     grape, _ = Grape.objects.get_or_create(name=col.grape, code=col.grape)
-    appellation, _ = Appellation.objects.get_or_create(
-        name=col.appellation, code=col.appellation
-    )
-    dic = {
-        "id": col.id,
-        # "website_id": col.website_id,
-        "name": col["name"],
-        "code": col["name"] + str(col.id),
-        "vintage": col.vintage,
-        "vintage": col.vintage if type(col.vintage) == "int" else 0000,
-        "winery": col.winery,
-        "country": col.country,
-        "region": col.region,
-        "soil": col.soil,
-        "color": col.color,
-        "bottle_size": col.bottle_size,
-        "viticulture": col.viticulture,
-        "apogee": col.apogee,
-        "garde": col.garde,
-        "alcool": col.alcool,
-        "price": col.price,
-        "ranking": col.ranking,
-        "image": col.image,
-        "url": col.url,
-        "website": col.website,
-    }
+    # appellation, _ = Appellation.objects.get_or_create(
+    #     name=col.appellation, code=col.appellation
+    # )
+    # dic = {
+    #     "id": col.id,
+    #     # "website_id": col.website_id,
+    #     "name": col["name"],
+    #     "code": col["name"] + str(col.id),
+    #     "vintage": col.vintage,
+    #     "vintage": col.vintage if type(col.vintage) == "int" else 0000,
+    #     "winery": col.winery,
+    #     "country": col.country,
+    #     "region": col.region,
+    #     "soil": col.soil,
+    #     "color": col.color,
+    #     "bottle_size": col.bottle_size,
+    #     "viticulture": col.viticulture,
+    #     "apogee": col.apogee,
+    #     "garde": col.garde,
+    #     "alcool": col.alcool,
+    #     "price": col.price,
+    #     "ranking": col.ranking,
+    #     "image": col.image,
+    #     "url": col.url,
+    #     "website": col.website,
+    # }
 
-    bottle_collection = BottleCollection.objects.create(**dic)
-    bottle_collection.grape.add(grape)
-    bottle_collection.save()
+    # bottle_collection = BottleCollection.objects.create(**dic)
+    # bottle_collection.grape.add(grape)
+    # bottle_collection.save()
 
-    bottle = Bottle.objects.create(
-        bottle_collection=bottle_collection, cellar=cellar, stock=1
-    )
-    print(bottle)
+    # bottle = Bottle.objects.create(
+    #     bottle_collection=bottle_collection, cellar=cellar, stock=1
+    # )
+    # print(bottle)
