@@ -20,9 +20,6 @@ class BottleViewSet(ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["bottle_collection__name"]
 
-    # test with 5 millions bottles
-    # look into his bottles
-    # filter by user before filtering
     def get_queryset(self):
         return (
             self.queryset.filter(cellar__user__email=self.request.user.email)
