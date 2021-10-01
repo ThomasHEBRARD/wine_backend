@@ -12,16 +12,30 @@ class UserSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class UserRegistrationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ("first_name", "last_name", "password", "email")
-        extra_kwargs = {"password": {"write_only": True}}
+class UserRegistrationSerializer(serializers.Serializer):
+    first_name = serializers.CharField(max_length=255)
+    last_name = serializers.CharField(max_length=255)
+    email = serializers.CharField(max_length=255)
+    token = serializers.CharField(max_length=255, read_only=True)
 
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        cellar = Cellar.objects.create(name="My Cellar", code=user.email, user=user)
-        return user
+    def create(self, data):
+        user = User.objects.create_user(**data)
+        Cellar.objects.create(name="My Cellar", code=user.email, user=user)
+
+        try:
+            payload = api_settings.JWT_PAYLOAD_HANDLER(user)
+            jwt_token = api_settings.JWT_ENCODE_HANDLER(payload)
+            update_last_login(None, user)
+        except User.DoesNotExist:
+            raise serializers.ValidationError(
+                "User with given email and password does not exists"
+            )
+        return {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "token": jwt_token,
+        }
 
 
 class UserLoginSerializer(serializers.Serializer):
