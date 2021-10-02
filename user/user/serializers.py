@@ -12,6 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "email")
+
+
 class UserRegistrationSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length=255)
     last_name = serializers.CharField(max_length=255)

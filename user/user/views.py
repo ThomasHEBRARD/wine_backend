@@ -6,11 +6,14 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
 from rest_framework.views import APIView
+from rest_framework.status import HTTP_200_OK
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from user.user.serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
     UserSerializer,
+    UserProfileSerializer,
 )
 from user.user.models import User
 
@@ -49,5 +52,11 @@ class UserLogoutViewSet(APIView):
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
+
+    @action(methods=["GET"], detail=False)
+    def profile(self, request):
+        user = self.queryset.get(id=request.user.id)
+        seriazlized_data = UserProfileSerializer(user).data
+        return Response(seriazlized_data, status=HTTP_200_OK)
