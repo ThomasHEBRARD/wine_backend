@@ -80,7 +80,7 @@ for row, col in df.iterrows():
         "name": col["name"],
         "code": col["name"] + str(col.id),
         "vintage": col.vintage,
-        "vintage": col.vintage if type(col.vintage) == "int" else 0000,
+        "vintage": col.vintage,
         "winery": col.winery,
         "country": col.country,
         "region": col.region,
@@ -105,7 +105,7 @@ for row, col in df.iterrows():
         grapes = grapes.split("/")
         for grape in grapes:
             percentage, grape_name = None, None
-            if "_" in col.grape:
+            if "_" in grape:
                 percentage, grape_name = grape.split("_")
             else:
                 grape_name = grape
