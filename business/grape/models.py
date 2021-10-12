@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Grape(BaseModel):
-    proportion = models.DecimalField(
+    percentage = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         blank=True,
