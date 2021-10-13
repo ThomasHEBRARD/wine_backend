@@ -36,29 +36,39 @@ class WineViticulture(models.TextChoices):
 class BottleCollection(BaseModel, TimeStampedModel):
     id = models.BigIntegerField(primary_key=True)  # uuid
     # grape -> ForeignKey in GrapeBottleCollection model
+    vintage = models.IntegerField(
+        null=True,
+        validators=[
+            MinValueValidator(limit_value=0, message="Should be greater than 0")
+        ],
+        default=0000,
+    )
     color = models.CharField(
         max_length=64,
         choices=WineColor.choices,
         default=WineColor.red,
         null=False,
     )
-    bottle_size = models.CharField(max_length=255, null=True)
-    image = models.CharField(max_length=255, null=True)
-    ranking = models.CharField(max_length=255, null=True)
-    url = models.CharField(max_length=255, null=True)
-    soil = models.CharField(max_length=255, null=True)
+    winery = models.CharField(max_length=255, null=True)
+    appellation = models.ForeignKey(
+        Appellation,
+        related_name="bottles",
+        on_delete=models.DO_NOTHING,
+        blank=False,
+        null=True,
+    )
     country = models.CharField(max_length=255, null=True)
     region = models.CharField(max_length=255, null=True)
     garde = models.CharField(max_length=255, null=True)
     apogee = models.CharField(max_length=255, null=True)
-    website = models.CharField(max_length=255, null=True)
-    winery = models.CharField(max_length=255, null=True)
+    soil = models.CharField(max_length=255, null=True)
     viticulture = models.CharField(
         max_length=64,
         choices=WineViticulture.choices,
         default=WineViticulture.not_specified,
         null=True,
     )
+    bottle_size = models.CharField(max_length=255, null=True)
     alcool = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -77,17 +87,7 @@ class BottleCollection(BaseModel, TimeStampedModel):
             MinValueValidator(limit_value=0, message="Should be greater than 0")
         ],
     )
-    vintage = models.IntegerField(
-        null=False,
-        validators=[
-            MinValueValidator(limit_value=0, message="Should be greater than 0")
-        ],
-        default=0000,
-    )
-    appellation = models.OneToOneField(
-        Appellation,
-        related_name="bottles",
-        on_delete=models.DO_NOTHING,
-        blank=False,
-        null=True,
-    )
+    ranking = models.CharField(max_length=255, null=True)
+    website = models.CharField(max_length=255, null=True)
+    image = models.CharField(max_length=255, null=True)
+    url = models.CharField(max_length=255, null=True)

@@ -1,5 +1,4 @@
-
-version: '3'
+version: "3"
 
 services:
   db_backend:
@@ -7,7 +6,7 @@ services:
     container_name: db_backend
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=1234  
+      - POSTGRES_PASSWORD=1234
     ports:
       - "5433:5432"
   app:
@@ -22,9 +21,5 @@ services:
       - "8000:8000"
     stdin_open: true
     tty: true
-
 # To communicate with the other container:
-# docker network create wine
-# docker network connect wine db_crawling
-# docker network connect wine db_backend
-# docker network connect wine wine-backend-app
+# docker network create wine | docker network connect wine db_crawling | docker network connect wine wine-backend-app

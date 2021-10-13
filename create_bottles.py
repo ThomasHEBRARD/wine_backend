@@ -66,20 +66,23 @@ column_names = [
 
 df = postgresql_to_dataframe(select_query, column_names)
 
-Grape.objects.all().delete()
 GrapeBottleCollection.objects.all().delete()
 Bottle.objects.all().delete()
 BottleCollection.objects.all().delete()
+Grape.objects.all().delete()
 Appellation.objects.all().delete()
 
 cellar = Cellar.objects.get(code="michael.scott@gnail.com")
 
 for row, col in df.iterrows():
+    appellation, _ = Appellation.objects.get_or_create(
+        name=col.appellation, code=col.appellation
+    )
     dic = {
         "id": col.id,
         # "website_id": col.website_id,
         "name": col["name"],
-        "code": col["name"] + str(col.id),
+        "code": col["name"].replace(" ", "_") + "_" + str(col.id),
         "vintage": col.vintage,
         "vintage": col.vintage,
         "winery": col.winery,
@@ -97,6 +100,7 @@ for row, col in df.iterrows():
         "image": col.image,
         "url": col.url,
         "website": col.website,
+        "appellation": appellation,
     }
 
     bottle_collection = BottleCollection.objects.create(**dic)
@@ -112,23 +116,23 @@ for row, col in df.iterrows():
                 percentage, grape_name = grape.split("_")
             else:
                 grape_name = grape
-
             grape_object, _ = Grape.objects.get_or_create(
                 name=grape_name,
                 code=unidecode.unidecode(grape_name.lower()).replace(" ", "_"),
             )
-            grape_bottle_collection_object, _ = GrapeBottleCollection(
+            print("grape_object", grape_object)
+            print("bottle_collection", bottle_collection)
+            print("percentage", percentage)
+            grape_bottle_collection_object = GrapeBottleCollection.objects.create(
                 grape=grape_object,
                 bottle_collection=bottle_collection,
                 percentage=percentage,
             )
+            print("grape_bottle_collection", grape_bottle_collection_object)
             grapes_objects.append(grape_bottle_collection_object)
 
-    appellation, _ = Appellation.objects.get_or_create(
-        name=col.appellation, code=col.appellation
-    )
-    bottle_collection.appellation.add(appellation)
-    bottle_collection.save()
+    # bottle_collection.appellation.add(appellation)
+    # bottle_collection.save()
 
     bottle = Bottle.objects.create(
         bottle_collection=bottle_collection, cellar=cellar, stock=1
