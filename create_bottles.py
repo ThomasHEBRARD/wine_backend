@@ -1,6 +1,6 @@
 from business.bottle.bottle_collection.models import BottleCollection
 from business.bottle.bottle.models import Bottle
-from business.grape.models import Grape
+from business.grape.models import Grape, GrapeBottleCollection
 from business.cellar.models import Cellar
 from business.appellation.models import Appellation
 
@@ -113,18 +113,15 @@ for row, col in df.iterrows():
             grape_object, _ = Grape.objects.get_or_create(
                 name=grape_name,
                 code=unidecode.unidecode(grape_name.lower()).replace(" ", "_"),
-                percentage=percentage,
             )
-            grapes_objects.append(grape_object)
+            
+            grapes_objects.append()
 
     appellation, _ = Appellation.objects.get_or_create(
         name=col.appellation, code=col.appellation
     )
 
     bottle_collection = BottleCollection.objects.create(**dic)
-    for grape_object in grapes_objects:
-        bottle_collection.grape.add(grape_object)
-    bottle_collection.save()
 
     bottle = Bottle.objects.create(
         bottle_collection=bottle_collection, cellar=cellar, stock=1

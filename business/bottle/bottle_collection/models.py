@@ -1,8 +1,7 @@
 from django.db import models
-from business.shared.models import BaseModel
 from django.core.validators import MinValueValidator
-from business.cellar.models import Cellar
-from business.grape.models import Grape
+
+from business.shared.models import BaseModel, TimeStampedModel
 from business.appellation.models import Appellation
 
 
@@ -17,11 +16,6 @@ class WineColor(models.TextChoices):
     white_dry = "White Dry"
     mutated_wine = "Mutated Wine"
     green = "Green"
-
-
-# {' Blanc demi-sec', ' Verte', ' Rosé', ' Rosé Effervescent',
-#  ' Blanc sec', ' Vin Muté', ' Rouge Effervescent', ' Blanc Liquoreux',
-#  ' Blanc', ' ', ' Ambré', ' Divers', ' Blanc Demi Sec', ' Orange', ' Jaune', ' Rouge', ' Blanc Effervescent'}
 
 
 class WineViticulture(models.TextChoices):
@@ -39,9 +33,8 @@ class WineViticulture(models.TextChoices):
     triple_a_bio = "Triple A and organic"
 
 
-class BottleCollection(BaseModel):
+class BottleCollection(BaseModel, TimeStampedModel):
     id = models.BigIntegerField(primary_key=True)  # uuid
-    grape = models.ManyToManyField(Grape, related_name="bottles")
     color = models.CharField(
         max_length=64,
         choices=WineColor.choices,
@@ -90,7 +83,7 @@ class BottleCollection(BaseModel):
         ],
         default=0000,
     )
-    appellation = models.ForeignKey(
+    appellation = models.OneToOneField(
         Appellation,
         related_name="bottles",
         on_delete=models.DO_NOTHING,

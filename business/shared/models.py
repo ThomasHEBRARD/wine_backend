@@ -2,8 +2,8 @@ from django.db import models
 
 
 class BaseModel(models.Model):
-    code = models.CharField(unique=True, max_length=255)
     name = models.CharField(unique=False, max_length=255)
+    code = models.CharField(unique=True, max_length=255)
 
     class Meta:
         abstract = True

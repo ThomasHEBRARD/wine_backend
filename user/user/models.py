@@ -1,6 +1,9 @@
 import uuid
 from django.db import models
+
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+
+from business.shared.models import TimeStampedModel
 
 
 class UserManager(BaseUserManager):
@@ -24,14 +27,18 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
+
 class Theme(models.TextChoices):
     white = "white"
     dark = "dark"
     auto = "auto"
 
-class User(AbstractBaseUser):
+
+class User(AbstractBaseUser, TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(verbose_name="email address", max_length=255, unique=True)
+    first_name = models.CharField(max_length=50, unique=False)
+    last_name = models.CharField(max_length=50, unique=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=True)
@@ -41,8 +48,6 @@ class User(AbstractBaseUser):
         default=Theme.white,
         null=False,
     )
-    first_name = models.CharField(max_length=50, unique=False)
-    last_name = models.CharField(max_length=50, unique=False)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
