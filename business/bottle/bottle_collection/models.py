@@ -35,6 +35,7 @@ class WineViticulture(models.TextChoices):
 
 class BottleCollection(BaseModel, TimeStampedModel):
     id = models.BigIntegerField(primary_key=True)  # uuid
+    # grape -> ForeignKey in GrapeBottleCollection model
     color = models.CharField(
         max_length=64,
         choices=WineColor.choices,
