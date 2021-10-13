@@ -76,13 +76,15 @@ cellar = Cellar.objects.get(code="michael.scott@gnail.com")
 
 for row, col in df.iterrows():
     appellation, _ = Appellation.objects.get_or_create(
-        name=col.appellation, code=col.appellation
+        name=col.appellation,
+        code=unidecode.unidecode(col.appellation.lower()).replace(" ", "_"),
     )
     dic = {
         "id": col.id,
-        # "website_id": col.website_id,
         "name": col["name"],
-        "code": col["name"].replace(" ", "_") + "_" + str(col.id),
+        "code": unidecode.unidecode(col["name"].lower()).replace(" ", "_")
+        + "_"
+        + str(col.id),
         "vintage": col.vintage,
         "vintage": col.vintage,
         "winery": col.winery,
@@ -120,9 +122,6 @@ for row, col in df.iterrows():
                 name=grape_name,
                 code=unidecode.unidecode(grape_name.lower()).replace(" ", "_"),
             )
-            print("grape_object", grape_object)
-            print("bottle_collection", bottle_collection)
-            print("percentage", percentage)
             grape_bottle_collection_object = GrapeBottleCollection.objects.create(
                 grape=grape_object,
                 bottle_collection=bottle_collection,
@@ -130,9 +129,6 @@ for row, col in df.iterrows():
             )
             print("grape_bottle_collection", grape_bottle_collection_object)
             grapes_objects.append(grape_bottle_collection_object)
-
-    # bottle_collection.appellation.add(appellation)
-    # bottle_collection.save()
 
     bottle = Bottle.objects.create(
         bottle_collection=bottle_collection, cellar=cellar, stock=1
