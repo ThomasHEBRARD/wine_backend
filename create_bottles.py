@@ -36,7 +36,7 @@ def postgresql_to_dataframe(select_query, column_names):
 
 
 select_query = """
-    SELECT * FROM public.crawled_bottles
+    SELECT * FROM public.cleaned_crawled_bottles
     """
 
 column_names = [
@@ -67,6 +67,7 @@ column_names = [
 df = postgresql_to_dataframe(select_query, column_names)
 
 Grape.objects.all().delete()
+GrapeBottleCollection.objects.all().delete()
 Bottle.objects.all().delete()
 BottleCollection.objects.all().delete()
 Appellation.objects.all().delete()
@@ -98,6 +99,8 @@ for row, col in df.iterrows():
         "website": col.website,
     }
 
+    bottle_collection = BottleCollection.objects.create(**dic)
+
     ## Process grapes
     grapes = col.grape
     grapes_objects = []
@@ -114,14 +117,18 @@ for row, col in df.iterrows():
                 name=grape_name,
                 code=unidecode.unidecode(grape_name.lower()).replace(" ", "_"),
             )
-            
-            grapes_objects.append()
+            grape_bottle_collection_object, _ = GrapeBottleCollection(
+                grape=grape_object,
+                bottle_collection=bottle_collection,
+                percentage=percentage,
+            )
+            grapes_objects.append(grape_bottle_collection_object)
 
     appellation, _ = Appellation.objects.get_or_create(
         name=col.appellation, code=col.appellation
     )
-
-    bottle_collection = BottleCollection.objects.create(**dic)
+    bottle_collection.appellation.add(appellation)
+    bottle_collection.save()
 
     bottle = Bottle.objects.create(
         bottle_collection=bottle_collection, cellar=cellar, stock=1
