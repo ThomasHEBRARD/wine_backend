@@ -6,7 +6,10 @@ from business.bottle.bottle_collection.models import BottleCollection
 
 
 class Grape(BaseModel):
-    # other_names/variantes = ?
+    name = models.CharField(unique=False, max_length=255)
+    code = models.CharField(unique=True, max_length=255)
+    variants = models.CharField(max_length=2000, null=True)
+    verified = models.BooleanField(default=True)
     pass
 
 

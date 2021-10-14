@@ -1,3 +1,8 @@
+from django.db.models import CharField
+from django.db.models.functions import Lower
+
+CharField.register_lookup(Lower)
+
 from business.bottle.bottle_collection.models import BottleCollection
 from business.bottle.bottle.models import Bottle
 from business.grape.models import Grape, GrapeBottleCollection
@@ -69,10 +74,11 @@ df = postgresql_to_dataframe(select_query, column_names)
 GrapeBottleCollection.objects.all().delete()
 Bottle.objects.all().delete()
 BottleCollection.objects.all().delete()
-Grape.objects.all().delete()
+# Grape.objects.all().delete()
 Appellation.objects.all().delete()
 
 cellar = Cellar.objects.get(code="michael.scott@gnail.com")
+
 
 for row, col in df.iterrows():
     appellation, _ = Appellation.objects.get_or_create(
@@ -110,7 +116,10 @@ for row, col in df.iterrows():
     ## Process grapes
     grapes = col.grape
     grapes_objects = []
+
     if grapes:
+        # Tous de la forme percentage_grape/percentage_grape/...
+        # ou grape/grape/grape si pas de percentage
         grapes = grapes.split("/")
         for grape in grapes:
             percentage, grape_name = None, None
@@ -118,19 +127,54 @@ for row, col in df.iterrows():
                 percentage, grape_name = grape.split("_")
             else:
                 grape_name = grape
-            grape_object, _ = Grape.objects.get_or_create(
-                name=grape_name,
-                code=unidecode.unidecode(grape_name.lower()).replace(" ", "_"),
-            )
+
+            grape_object = None
+
+            print(grape_name)
+            try:
+                grape_object = Grape.objects.get(
+                    code=unidecode.unidecode(grape_name.lower()).replace(" ", "_")
+                )
+            except Grape.DoesNotExist:
+                grape_object = None
+            if not grape_object:
+                try:
+                    grape_object = Grape.objects.get(
+                        variants__lower__icontains=unidecode.unidecode(
+                            grape_name.lower()
+                        )
+                    )
+                except Grape.DoesNotExist:
+                    grape_object = None
+                if not grape_object:
+                    try:
+                        grape_object = Grape.objects.get(
+                            variants__icontains=unidecode.unidecode(grape_name)
+                        )
+                    except Grape.DoesNotExist:
+                        grape_object = None
+
+                    if not grape_object:
+                        grape_object = Grape.objects.create(
+                            name=grape_name,
+                            code=unidecode.unidecode(grape_name.lower()).replace(
+                                " ", "_"
+                            ),
+                            verified=False,
+                        )
+                        print("pipi", grape_name)
+
+            #On peu faire par exmemple : Si merlott, on prend tous les grapes percentages et on leur change les grapes id
+            # fuzzywuzz ??? levenshtein ??
+
             grape_bottle_collection_object = GrapeBottleCollection.objects.create(
                 grape=grape_object,
                 bottle_collection=bottle_collection,
                 percentage=percentage,
             )
-            print("grape_bottle_collection", grape_bottle_collection_object)
             grapes_objects.append(grape_bottle_collection_object)
 
     bottle = Bottle.objects.create(
         bottle_collection=bottle_collection, cellar=cellar, stock=1
     )
-    print(bottle)
+    # print(bottle)
